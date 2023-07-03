@@ -1,0 +1,10 @@
+title New Note Single Page App
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+note over browser
+POST request contains\nnote as JSON data
+end note
+server-->browser: code-201
+note over browser
+Browser will not redirect as SPA\nuses JS code that contains JSON\ndata from the server. 
+end note
