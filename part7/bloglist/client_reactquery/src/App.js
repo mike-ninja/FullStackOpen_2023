@@ -18,9 +18,13 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    blogService.getAll()
+      .then(blogs =>
+        setBlogs(blogs)
+      )
+      .catch(error => {
+        console.log(error)
+      })
   }, [])
 
   useEffect(() => {
@@ -33,7 +37,7 @@ const App = () => {
   }, [])
 
   const handleLogin = async (username, password) => {
-    event.preventDefault()
+    // event.preventDefault()
 
     try {
       const user = await loginService.login({
@@ -80,7 +84,7 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable buttonLabel='New Blog' ref={blogFormRef}>
-      <BlogForm createBlog={addBlog}/>
+      <BlogForm createBlog={addBlog} />
     </Togglable>
   )
 
@@ -88,8 +92,8 @@ const App = () => {
     return (
       <div>
         <h2>Log in to the application</h2>
-        <NotificationError message={errorMessage}/>
-        <NotificationSuccess message={successMessage}/>
+        <NotificationError message={errorMessage} />
+        <NotificationSuccess message={successMessage} />
         <LoginForm handleSubmit={handleLogin} />
       </div>
     )
@@ -117,8 +121,8 @@ const App = () => {
     <div>
       <h2>blogs</h2>
 
-      <NotificationError message={errorMessage}/>
-      <NotificationSuccess message={successMessage}/>
+      <NotificationError message={errorMessage} />
+      <NotificationSuccess message={successMessage} />
 
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <p>{user.name} logged in</p>
