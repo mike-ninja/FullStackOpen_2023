@@ -1,50 +1,77 @@
-import { useState } from 'react'
+import { useNotificationDispatch } from '../context/NotificationContext'
+import { useMutation, useQueryClient } from 'react-query'
+import { useField } from '../hooks/index'
+import { addBlog } from '../request'
 
-const BlogForm = ({ createBlog }) => {
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+const BlogForm = () => {
+  const dispatch = useNotificationDispatch()
+  const queryClient = useQueryClient()
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
 
-  const addBlog = (event) => {
+  const newBlogMutation = useMutation(addBlog, {
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData('blogs')
+      queryClient.setQueryData('blogs', blogs.concat(newBlog))
+      dispatch({
+        type: 'SET_NOTIFICATION',
+        payload: `You have added ${newBlog.title}`
+      })
+      setTimeout(() => {
+        dispatch({ type: 'RESET' })
+      }, 5000)
+    },
+    onError: () => {
+      dispatch({
+        type: 'SET_NOTIFICATION',
+        payload: `Too short anecdote, must have length 5 or more`
+      })
+      setTimeout(() => {
+        dispatch({ type: 'RESET' })
+      }, 5000)
+    }
+  })
+
+  const onCreate = (event) => {
     event.preventDefault()
-    createBlog({
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    })
+    const newBlog = {
+      title: title.value,
+      author: author.value,
+      url: url.value,
+      likes: 0
+    }
 
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
+    newBlogMutation.mutate(newBlog)
   }
 
   return (
     <div>
       <h2>Create a new entry</h2>
 
-      <form onSubmit={addBlog}>
+      <form onSubmit={onCreate}>
         <div>
           Title
           <input
             id='title'
-            value={newTitle}
-            onChange={({ target }) => setNewTitle(target.value)}
+            value={title.value}
+            onChange={title.onChange}
           />
         </div>
         <div>
           Author
           <input
             id='author'
-            value={newAuthor}
-            onChange={({ target }) => setNewAuthor(target.value)}
+            value={author.value}
+            onChange={author.onChange}
           />
         </div>
         <div>
           Url
           <input
             id='url'
-            value={newUrl}
-            onChange={({ target }) => setNewUrl(target.value)}
+            value={url.value}
+            onChange={url.onChange}
           />
         </div>
         <button

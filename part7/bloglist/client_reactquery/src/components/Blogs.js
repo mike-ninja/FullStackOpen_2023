@@ -1,15 +1,8 @@
 import { useQuery } from 'react-query'
 import { getBlogs } from '../request'
+import Blog from './Blog'
 
-const Blog = ({ blog }) => {
-  return (
-    <div>
-      {blog.title} {blog.author}
-    </div>
-  )
-}
-
-const Blogs = () => {
+const Blogs = ({ loggedUser }) => {
   const result = useQuery(
     'blogs', getBlogs,
     {
@@ -19,7 +12,7 @@ const Blogs = () => {
   )
 
   if (result.isLoading) {
-    return <div>lodaing data...</div>
+    return <div>loading data...</div>
   }
 
   const sortedBlogs = result.data.sort((a, b) => b.likes - a.likes)
@@ -31,6 +24,7 @@ const Blogs = () => {
         <Blog
           key={blog.id}
           blog={blog}
+          loggedUser={loggedUser}
         />
       )}
     </div>

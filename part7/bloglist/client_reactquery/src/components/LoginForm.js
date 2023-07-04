@@ -4,7 +4,8 @@ const LoginForm = ({ handleSubmit }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = () => {
+  const handleLogin = (event) => {
+    event.preventDefault()
     handleSubmit(username, password)
     setUsername('') // May not be necessary
     setPassword('') // May not be necessary
