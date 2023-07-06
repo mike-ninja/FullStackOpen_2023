@@ -1,9 +1,11 @@
 import { useMutation, useQueryClient } from "react-query";
 import { useState } from "react";
 import { deleteBlog, updateBlog } from "../request";
+import { useUserValue } from "../context/UserContext";
 
-const Blog = ({ blog, loggedUser }) => {
+const Blog = ({ blog }) => {
   const queryClient = useQueryClient();
+  const loggedUser = useUserValue();
   const [view, setView] = useState(false);
 
   const hideWhenVisible = { display: view ? "none" : "" };

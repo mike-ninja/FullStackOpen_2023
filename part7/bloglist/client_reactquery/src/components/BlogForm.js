@@ -13,6 +13,7 @@ const BlogForm = () => {
   const newBlogMutation = useMutation(addBlog, {
     onSuccess: (newBlog) => {
       const blogs = queryClient.getQueryData('blogs')
+      console.log(newBlog);
       queryClient.setQueryData('blogs', blogs.concat(newBlog))
       dispatch({
         type: 'SET_NOTIFICATION',
@@ -41,7 +42,9 @@ const BlogForm = () => {
       url: url.value,
       likes: 0
     }
-
+    title.reset();
+    author.reset();
+    url.reset();
     newBlogMutation.mutate(newBlog)
   }
 

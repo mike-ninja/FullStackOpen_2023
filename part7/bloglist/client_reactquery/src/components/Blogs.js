@@ -1,8 +1,9 @@
+import { useEffect } from 'react'
 import { useQuery } from 'react-query'
 import { getBlogs } from '../request'
 import Blog from './Blog'
 
-const Blogs = ({ loggedUser }) => {
+const Blogs = () => {
   const result = useQuery(
     'blogs', getBlogs,
     {
@@ -17,6 +18,7 @@ const Blogs = ({ loggedUser }) => {
 
   const sortedBlogs = result.data.sort((a, b) => b.likes - a.likes)
 
+  console.log(sortedBlogs)
   return (
     <div>
       <h2>Blogs</h2>
@@ -24,7 +26,6 @@ const Blogs = ({ loggedUser }) => {
         <Blog
           key={blog.id}
           blog={blog}
-          loggedUser={loggedUser}
         />
       )}
     </div>

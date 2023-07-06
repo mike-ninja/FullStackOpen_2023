@@ -9,17 +9,22 @@ import { setToken } from "./request";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Blogs from "./components/Blogs";
+import { useUserDispatch, useUserValue } from "./context/UserContext";
 
 const App = () => {
-  const dispatch = useNotificationDispatch();
-  const [user, setUser] = useState(null);
+  const notificationDispatch = useNotificationDispatch();
+  const userDispatch = useUserDispatch();
+  const loggedUser = useUserValue();
   const blogFormRef = useRef();
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      userDispatch({
+        type: "SET_USER",
+        payload: user,
+      });
       setToken(user.token);
     }
   }, []);
@@ -37,14 +42,18 @@ const App = () => {
         JSON.stringify(user),
       );
       blogService.setToken(user.token);
-      setUser(user);
+      console.log("user", user);
+      userDispatch({
+        type: "SET_USER",
+        payload: user,
+      });
     } catch (exception) {
-      dispatch({
+      notificationDispatch({
         type: "SET_NOTIFICATION",
         payload: `Wrong credentials`,
       });
       setTimeout(() => {
-        dispatch({ type: "RESET" });
+        notificationDispatch({ type: "RESET" });
       }, 5000);
     }
   };
@@ -55,16 +64,16 @@ const App = () => {
         "loggedBlogAppUser",
       );
       blogService.setToken(null);
-      setUser(null);
+      userDispatch({ type: "RESET" });
     } catch (exception) {
-      dispatch({
+      notificationDispatch({
         type: "SET_NOTIFICATION",
-        payload: `Encountere an error. Try again`,
+        payload: `Encountered an error. Try again`,
       });
       setTimeout(() => {
-        dispatch({ type: "RESET" });
+        notificationDispatch({ type: "RESET" });
       }, 5000);
-    }
+   }
   };
 
   const blogForm = () => (
@@ -73,7 +82,7 @@ const App = () => {
     </Togglable>
   );
 
-  if (user === null) {
+  if (loggedUser === null) {
     return (
       <div>
         <h2>Log in to the application</h2>
@@ -88,12 +97,12 @@ const App = () => {
       <h2>blogs</h2>
       <Notification />
       <div style={{ display: "flex", alignItems: "center" }}>
-        <p>{user.name} logged in</p>
+        <p>{loggedUser.name} logged in</p>
         <button onClick={handleLogout}>Logout</button>
       </div>
 
       {blogForm()}
-      <Blogs loggedUser={user} />
+      <Blogs />
     </div>
   );
 };

@@ -44,7 +44,16 @@ blogsRouter.post("/", userExtractor, async (request, response, next) => {
   const savedBlog = await blog.save();
   user.blogs = user.blogs.concat(savedBlog.id);
   await user.save();
-  response.status(201).json(savedBlog);
+  console.log(savedBlog)
+  const newBlog = {
+    id: savedBlog.id,
+    title: savedBlog.title,
+    author: savedBlog.author,
+    url: savedBlog.url,
+    likes: savedBlog.likes,
+    user: { username: user.username, name: user.name, id: user.id },
+  };
+  response.status(201).json(newBlog);
 });
 
 // Updating a blog
