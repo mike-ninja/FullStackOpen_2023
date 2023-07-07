@@ -1,10 +1,6 @@
-import { useMutation, useQueryClient } from "react-query";
-import { addBlog } from "../request";
-
 import { useField } from "../hooks/index";
 import { useDispatch } from "react-redux";
 import { newBlog } from "../reducers/blogReducer";
-import { setNotification } from "../reducers/notificationReducer";
 
 const BlogForm = () => {
   const dispatch = useDispatch();
@@ -29,7 +25,6 @@ const BlogForm = () => {
   return (
     <div>
       <h2>Create a new entry</h2>
-
       <form onSubmit={onCreate}>
         <div>
           Title
