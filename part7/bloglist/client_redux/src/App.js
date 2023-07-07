@@ -6,59 +6,29 @@ import Notification from "./components/Notification";
 import Blogs from "./components/Blogs";
 
 import blogService from "./services/blogs";
-import loginService from "./services/login";
-import { useUserDispatch, useUserValue } from "./context/UserContext";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./reducers/notificationReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
-// import { setToken } from "./request";
+import { userLogin, userLogout } from "./reducers/userReducer";
 
 const App = () => {
   const dispatch = useDispatch();
-
-  const userDispatch = useUserDispatch();
-  const loggedUser = useUserValue();
+  const loggedUser = useSelector(({ user }) => user);
   const blogFormRef = useRef();
 
   useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [dispatch])
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      userDispatch({
-        type: "SET_USER",
-        payload: user,
-      });
-      // setToken(user.token);
+      console.log(user);
+      dispatch(userLogin(user));
       blogService.setToken(user.token);
     }
-  }, []);
-
-  const handleLogin = async (username, password) => {
-    try {
-      console.log(username);
-      const user = await loginService.login({
-        username,
-        password,
-      });
-
-      window.localStorage.setItem(
-        "loggedBlogAppUser",
-        JSON.stringify(user),
-      );
-      blogService.setToken(user.token);
-      console.log("user", user);
-      userDispatch({
-        type: "SET_USER",
-        payload: user,
-      });
-    } catch (exception) {
-      dispatch(setNotification("Wrong credentials", 3));
-    }
-  };
+  }, [dispatch]);
 
   const handleLogout = async () => {
     try {
@@ -66,7 +36,7 @@ const App = () => {
         "loggedBlogAppUser",
       );
       blogService.setToken(null);
-      userDispatch({ type: "RESET" });
+      dispatch(userLogout());
     } catch (exception) {
       dispatch(setNotification("Encountered an error", 3));
     }
@@ -83,7 +53,7 @@ const App = () => {
       <div>
         <h2>Log in to the application</h2>
         <Notification />
-        <LoginForm handleSubmit={handleLogin} />
+        <LoginForm />
       </div>
     );
   }
@@ -96,7 +66,6 @@ const App = () => {
         <p>{loggedUser.name} logged in</p>
         <button onClick={handleLogout}>Logout</button>
       </div>
-
       {blogForm()}
       <Blogs />
     </div>

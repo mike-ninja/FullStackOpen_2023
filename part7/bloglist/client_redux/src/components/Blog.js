@@ -1,13 +1,11 @@
 import { useMutation, useQueryClient } from "react-query";
 import { useState } from "react";
-import { deleteBlog, updateBlog } from "../request";
 import { useUserValue } from "../context/UserContext";
-import { useDispatch } from "react-redux";
-import { likeBlog } from "../reducers/blogReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { likeBlog, deleteBlog } from "../reducers/blogReducer";
 
 const Blog = ({ blog }) => {
-  const queryClient = useQueryClient();
-  const loggedUser = useUserValue();
+  const loggedUser = useSelector(({user}) => user);
   const dispatch = useDispatch();
   const [view, setView] = useState(false);
 
@@ -37,24 +35,9 @@ const Blog = ({ blog }) => {
     dispatch(likeBlog(likedBlog))
   };
 
-  const removeBlogMutation = useMutation(deleteBlog, {
-    onSuccess: (deletedBlog) => {
-      const blogs = queryClient.getQueryData("blogs");
-      queryClient.setQueryData(
-        "blogs",
-        blogs.filter((blog) => blog.id !== deletedBlog),
-      );
-    },
-  });
-
   const removeBlog = (blog) => {
-    const result = window.confirm(
-      `Removing blog ${blog.title} by ${blog.author}`,
-    );
-    if (result) {
-      removeBlogMutation.mutate(blog);
-    }
-  };
+    dispatch(deleteBlog(blog.id))
+  }
 
   const user = blog.user ? blog.user.name : "";
 

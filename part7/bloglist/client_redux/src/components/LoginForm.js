@@ -1,22 +1,40 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { userLogin } from "../reducers/userReducer";
+import loginService from "../services/login";
+import blogService from "../services/blogs";
+import { useDispatch } from "react-redux";
 
-const LoginForm = ({ handleSubmit }) => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+const LoginForm = () => {
+  const dispatch = useDispatch();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = (event) => {
-    event.preventDefault()
-    handleSubmit(username, password)
-    setUsername('') // May not be necessary
-    setPassword('') // May not be necessary
-  }
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    try {
+      const user = await loginService.login({
+        username,
+        password,
+      });
+      window.localStorage.setItem(
+        "loggedBlogAppUser",
+        JSON.stringify(user),
+      );
+      blogService.setToken(user.token);
+      dispatch(userLogin(user));
+    } catch (error) {
+      console.log("incorrect");
+    }
+    setUsername(""); // May not be necessary
+    setPassword(""); // May not be necessary
+  };
 
   return (
     <form onSubmit={handleLogin}>
       <div>
         username
         <input
-          id='username'
+          id="username"
           type="text"
           value={username}
           name="Username"
@@ -26,16 +44,16 @@ const LoginForm = ({ handleSubmit }) => {
       <div>
         password
         <input
-          id='password'
+          id="password"
           type="password"
           value={password}
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button id='login-button' type="submit">login</button>
+      <button id="login-button" type="submit">login</button>
     </form>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;
