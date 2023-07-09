@@ -1,12 +1,11 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const User = () => {
+const Users = () => {
   const users = useSelector(({ users }) => {
-    return users.map((user) => user);
+    return users;
   });
 
-  console.log(users);
   return (
     <div>
       <h2>Users</h2>
@@ -35,4 +34,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Users;

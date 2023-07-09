@@ -20,6 +20,8 @@ const Blogs = () => {
     </Togglable>
   );
 
+  console.log(blogs)
+
   return (
     <div>
       {blogForm()}

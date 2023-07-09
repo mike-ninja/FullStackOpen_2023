@@ -1,11 +1,14 @@
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import usersService from "../services/users";
 
-const User = async () => {
+const User = () => {
   const { id } = useParams();
-  const user = await usersService.getUser(id);
+  const user = useSelector(({ users }) => {
+    return users.filter(user => user.id === id)[0]
+  });
 
-  console.log(user);
+  if (!user)
+    return null
   return (
     <div>
       <h2>User</h2>

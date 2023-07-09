@@ -4,11 +4,7 @@ import { setNotification } from "./reducers/notificationReducer";
 import { initializeBlogs } from "./reducers/blogReducer";
 import { initializeUsers } from "./reducers/usersReducer";
 import { userLogin, userLogout } from "./reducers/userReducer";
-import {
-  Route,
-  Routes,
-  useMatch,
-} from 'react-router-dom'
+import { Route, Routes } from "react-router-dom";
 
 import blogService from "./services/blogs";
 import LoginForm from "./components/LoginForm";
