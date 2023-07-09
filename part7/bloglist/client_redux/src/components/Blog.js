@@ -1,29 +1,18 @@
-import { useMutation, useQueryClient } from "react-query";
-import { useState } from "react";
-import { useUserValue } from "../context/UserContext";
 import { useDispatch, useSelector } from "react-redux";
-import { likeBlog, deleteBlog } from "../reducers/blogReducer";
+import { useParams } from "react-router-dom";
+import { likeBlog } from "../reducers/blogReducer";
 
-const Blog = ({ blog }) => {
-  const loggedUser = useSelector(({user}) => user);
+const Blog = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
-  const [view, setView] = useState(false);
-
-  const hideWhenVisible = { display: view ? "none" : "" };
-  const showWhenVisible = { display: view ? "" : "none" };
-
-  let showRemoveButton;
-  if (!blog.user) {
-    showRemoveButton = { display: "none" };
-  } else {
-    showRemoveButton = {
-      display: loggedUser.name === blog.user.name ? "" : "none",
-    };
+  const blog = useSelector(({ blogs }) => {
+    return blogs
+      .map((blog) => blog)
+      .filter((blog) => blog.id === id)[0];
+  });
+  if (!blog) {
+    return null;
   }
-
-  const toggleView = () => {
-    setView(!view);
-  };
 
   const increaseLike = (blog) => {
     const likedBlog = {
@@ -32,45 +21,27 @@ const Blog = ({ blog }) => {
       author: blog.author,
       likes: blog.likes + 1,
     };
-    dispatch(likeBlog(likedBlog))
+    dispatch(likeBlog(likedBlog));
   };
 
-  const removeBlog = (blog) => {
-    dispatch(deleteBlog(blog.id))
-  }
-
-  const user = blog.user ? blog.user.name : "";
-
+  console.log(blog)
   return (
-    <div className="blog">
-      {blog.title} {blog.author}
-      <button
-        className="viewButton"
-        style={hideWhenVisible}
-        onClick={toggleView}
+    <div>
+      <h2>{blog.title}</h2>
+      <a
+        href={blog.url}
+        target="_blank"
+        rel="noreferrer"
       >
-        view
-      </button>
-      <button style={showWhenVisible} onClick={toggleView}>
-        hide
-      </button>
-      <div className="extraData" style={showWhenVisible}>
-        <p>{blog.url}</p>
-        <div className="likes">
-          likes {blog.likes}
-          <button className="likeButton" onClick={() => increaseLike(blog)}>
-            like
-          </button>
-        </div>
-        <button
-          className="remove"
-          style={showRemoveButton}
-          onClick={() => removeBlog(blog)}
-        >
-          remove
+        {blog.url}
+      </a>
+      <div className="likes">
+        {blog.likes} likes
+        <button className="likeButton" onClick={() => increaseLike(blog)}>
+          like
         </button>
-        <p>{user}</p>
       </div>
+      <p>added by {blog.user.name}</p>
     </div>
   );
 };

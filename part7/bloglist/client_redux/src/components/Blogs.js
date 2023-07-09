@@ -1,18 +1,17 @@
-import { useSelector } from "react-redux";
-import { useRef } from "react";
-
 import Togglable from "./Togglable";
 import BlogForm from "./BlogForm";
-import Blog from "./Blog";
+import { useSelector } from "react-redux";
+import { useRef } from "react";
+import { Link } from "react-router-dom";
 
 const Blogs = () => {
   const blogFormRef = useRef();
 
   const blogs = useSelector(({ blogs }) => {
     return blogs
-      .map(b => b)
-      .sort((a, b) => b.likes - a.likes)
-  })
+      .map((b) => b)
+      .sort((a, b) => b.likes - a.likes);
+  });
 
   const blogForm = () => (
     <Togglable buttonLabel="New Blog" ref={blogFormRef}>
@@ -20,17 +19,23 @@ const Blogs = () => {
     </Togglable>
   );
 
-  console.log(blogs)
+  const style = {
+    border: "solid",
+    padding: 10,
+    borderWidth: 1,
+    marginBottom: 5,
+  };
+
+  console.log(blogs);
 
   return (
     <div>
       {blogForm()}
       <h2>Blogs</h2>
       {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-        />
+        <Link key={blog.id} to={`/blogs/${blog.id}`}>
+          <div style={style}>{blog.title} {blog.author}</div>
+        </Link>
       ))}
     </div>
   );
