@@ -14,6 +14,9 @@ import Blogs from "./components/Blogs";
 import Blog from "./components/Blog";
 import Menu from "./components/Menu";
 import { initialComments } from "./reducers/commentReducer";
+import { setNotification } from "./reducers/notificationReducer";
+import { userLogout } from "./reducers/userReducer";
+import { Button } from "react-bootstrap";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,9 +34,21 @@ const App = () => {
     dispatch(initialComments());
   }, [dispatch]);
 
+  const handleLogout = async () => {
+    try {
+      window.localStorage.removeItem(
+        "loggedBlogAppUser",
+      );
+      blogService.setToken(null);
+      dispatch(userLogout());
+    } catch (exception) {
+      dispatch(setNotification("Encountered an error", 3));
+    }
+  };
+
   if (loggedUser === null) {
     return (
-      <div>
+      <div className="container">
         <h2>Log in to the application</h2>
         <Notification />
         <LoginForm />
@@ -42,9 +57,14 @@ const App = () => {
   }
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <Menu loggedUser={loggedUser} />
+    <div className="container">
+      <Menu />
+      <div>
+        <span>
+          {loggedUser.name} logged in
+        </span>
+        <Button onClick={handleLogout}>Logout</Button>
+      </div>
       <Notification />
       <Routes>
         <Route path="/" element={<Blogs />} />

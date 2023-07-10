@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
+import { updateUser } from "./usersReducer";
 
 const blogSlice = createSlice({
   name: "blog",

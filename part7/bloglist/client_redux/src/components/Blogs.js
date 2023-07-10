@@ -3,6 +3,7 @@ import BlogForm from "./BlogForm";
 import { useSelector } from "react-redux";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
+import { Table } from "react-bootstrap";
 
 const Blogs = () => {
   const blogFormRef = useRef();
@@ -30,11 +31,19 @@ const Blogs = () => {
     <div>
       {blogForm()}
       <h2>Blogs</h2>
-      {blogs.map((blog) => (
-        <Link key={blog.id} to={`/blogs/${blog.id}`}>
-          <div style={style}>{blog.title} {blog.author}</div>
-        </Link>
-      ))}
+      <Table striped>
+        <tbody>
+          {blogs.map((blog) => (
+            <tr key={blog.id}>
+              <td>
+                <Link to={`/blogs/${blog.id}`}>
+                  {blog.title} by {blog.author}
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 };

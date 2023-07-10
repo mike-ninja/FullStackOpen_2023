@@ -1,6 +1,7 @@
 import { useField } from "../hooks/index";
 import { useDispatch } from "react-redux";
 import { newBlog } from "../reducers/blogReducer";
+import { Button, Form } from "react-bootstrap";
 
 const BlogForm = () => {
   const dispatch = useDispatch();
@@ -19,46 +20,37 @@ const BlogForm = () => {
     title.reset();
     author.reset();
     url.reset();
-    dispatch(newBlog(blog))
+    dispatch(newBlog(blog));
   };
 
   return (
     <div>
       <h2>Create a new entry</h2>
-      <form onSubmit={onCreate}>
-        <div>
-          Title
-          <input
-            id="title"
-            value={title.value}
-            onChange={title.onChange}
-          />
-        </div>
-        <div>
-          Author
-          <input
-            id="author"
-            value={author.value}
-            onChange={author.onChange}
-          />
-        </div>
-        <div>
-          Url
-          <input
-            id="url"
-            value={url.value}
-            onChange={url.onChange}
-          />
-        </div>
-        <button
-          id="addBlog-button"
-          type="submit"
-        >
+      <Form onSubmit={onCreate}>
+
+      <Form.Group>
+        <Form.Label>Title</Form.Label>
+        <Form.Control
+          type={title.type}
+          onChange={title.onChange}
+        />
+        <Form.Label>Author</Form.Label>
+        <Form.Control
+          type={author.type}
+          onChange={author.onChange}
+        />
+        <Form.Label>Url</Form.Label>
+        <Form.Control
+          type={url.type}
+          onChange={url.onChange}
+        />
+        <Button variant="primary" type="submit">
           Add Blog
-        </button>
-      </form>
+        </Button>
+      </Form.Group>
+      </Form>
     </div>
-  );
+  )
 };
 
 export default BlogForm;

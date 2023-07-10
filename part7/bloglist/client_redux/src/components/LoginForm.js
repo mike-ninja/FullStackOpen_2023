@@ -3,6 +3,7 @@ import { userLogin } from "../reducers/userReducer";
 import loginService from "../services/login";
 import blogService from "../services/blogs";
 import { useDispatch } from "react-redux";
+import { Form, Button } from "react-bootstrap";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -30,29 +31,24 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          id="username"
+    <Form onSubmit={handleLogin}>
+      <Form.Group>
+        <Form.Label>Username</Form.Label>
+        <Form.Control
           type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
+          name="username"
+          onChange={({target}) => setUsername(target.value)}
         />
-      </div>
-      <div>
-        password
-        <input
-          id="password"
+        <Form.Label>Password</Form.Label>
+        <Form.Control
           type="password"
-          value={password}
-          name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
-      </div>
-      <button id="login-button" type="submit">login</button>
-    </form>
+      </Form.Group>
+      <Button variant="primary" type="submit">
+        login
+      </Button>
+    </Form>
   );
 };
 
