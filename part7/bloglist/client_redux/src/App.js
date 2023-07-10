@@ -13,6 +13,7 @@ import Notification from "./components/Notification";
 import Blogs from "./components/Blogs";
 import Blog from "./components/Blog";
 import Menu from "./components/Menu";
+import { initialComments } from "./reducers/commentReducer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const App = () => {
     }
     dispatch(initializeBlogs());
     dispatch(initializeUsers());
+    dispatch(initialComments());
   }, [dispatch]);
 
   if (loggedUser === null) {
@@ -42,7 +44,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Menu loggedUser={loggedUser}/>
+      <Menu loggedUser={loggedUser} />
       <Notification />
       <Routes>
         <Route path="/" element={<Blogs />} />

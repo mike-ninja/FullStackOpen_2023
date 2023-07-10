@@ -45,7 +45,6 @@ export const newBlog = (newBlog) => {
 
 export const likeBlog = (likedBlog) => {
   return async (dispatch) => {
-    console.log(likedBlog);
     const updatedBlog = await blogService.update(likedBlog.id, likedBlog);
     dispatch(like(updatedBlog.id));
   };

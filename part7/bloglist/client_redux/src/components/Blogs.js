@@ -26,8 +26,6 @@ const Blogs = () => {
     marginBottom: 5,
   };
 
-  console.log(blogs);
-
   return (
     <div>
       {blogForm()}
