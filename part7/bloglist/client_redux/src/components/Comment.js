@@ -1,6 +1,8 @@
 import { useField } from "../hooks";
 import { useDispatch, useSelector } from "react-redux";
 import { newComment } from "../reducers/commentReducer";
+import { ListGroup } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
 const Comment = ({ blog }) => {
   const dispatch = useDispatch();
@@ -25,25 +27,24 @@ const Comment = ({ blog }) => {
     <div>
       <h3>Comments</h3>
       <div>
-        <form onSubmit={onCreate}>
-          <input
-            id="comment"
-            value={comment.value}
+        <Form onSubmit={onCreate}>
+          <Form.Control
+            type={comment.type}
             onChange={comment.onChange}
           />
-          <button
-            id="btn"
+          <Button
+            variant="primary"
             type="submit"
           >
             Add Comment
-          </button>
-        </form>
+          </Button>
+        </Form>
       </div>
-      <ul>
+      <ListGroup>
         {comments.map(comment => 
-          <li key={comment.id}>{comment.comment}</li>
+          <ListGroup.Item key={comment.id}>{comment.comment}</ListGroup.Item>
         )}
-      </ul>
+      </ListGroup>
     </div>
   );
 };

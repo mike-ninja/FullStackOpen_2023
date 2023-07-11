@@ -1,3 +1,4 @@
+import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { likeBlog } from "../reducers/blogReducer";
@@ -37,9 +38,9 @@ const Blog = () => {
       </a>
       <div className="likes">
         {blog.likes} likes
-        <button className="likeButton" onClick={() => increaseLike(blog)}>
+        <Button className="likeButton" onClick={() => increaseLike(blog)}>
           like
-        </button>
+        </Button>
       </div>
       <p>added by {blog.user.name}</p>
       <Comment blog={blog}/>
