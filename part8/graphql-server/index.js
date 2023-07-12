@@ -101,6 +101,7 @@ let books = [
 const typeDefs = `
   type Author {
     name: String!
+    born: Int
     bookCount: Int!
   }
 
@@ -126,6 +127,10 @@ const typeDefs = `
       published: Int!
       genres: [String!]!
     ): Book
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `;
 
@@ -156,6 +161,7 @@ const resolvers = {
         ).length;
         return {
           name: author.name,
+          born: author.born,
           bookCount: bookCount,
         };
       });
@@ -167,13 +173,29 @@ const resolvers = {
         // Author does not exist. Need to create new author
         const newAuthor = {
           name: args.author,
-          born: null
-        }
-        authors = authors.concat(newAuthor)
+          born: null,
+        };
+        authors = authors.concat(newAuthor);
       }
       const book = { ...args, id: uuid() };
       books = books.concat(book);
       return book;
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find((a) => a.name === args.name);
+      if (!author) {
+        return null;
+      }
+
+      const bookCount =
+        books.filter((book) => book.author === author.name).length;
+      const updatedAuthor = {
+        ...author,
+        born: args.setBornTo,
+        bookCount: bookCount,
+      };
+      authors = authors.map((a) => a.name === args.name ? updatedAuthor : a);
+      return updatedAuthor;
     },
   },
 };
