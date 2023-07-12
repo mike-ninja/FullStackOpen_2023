@@ -1,5 +1,6 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
+const { v1: uuid } = require("uuid");
 
 let authors = [
   {
@@ -117,6 +118,15 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
   }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
+  }
 `;
 
 const resolvers = {
@@ -131,12 +141,16 @@ const resolvers = {
       } else if (!args.author && args.genre) {
         return books.filter((book) => book.genres.includes(args.genre));
       } else if (args.author && args.genre) {
-        const filteredByAuthor = books.filter((book) => args.author == book.author)
-        return filteredByAuthor.filter((book) => book.genres.includes(args.genre))
+        const filteredByAuthor = books.filter((book) =>
+          args.author == book.author
+        );
+        return filteredByAuthor.filter((book) =>
+          book.genres.includes(args.genre)
+        );
       }
     },
     allAuthors: () => {
-      const authorsWithBookCount = authors.map((author) => {
+      return authors.map((author) => {
         const bookCount = books.filter((book) =>
           book.author === author.name
         ).length;
@@ -145,7 +159,21 @@ const resolvers = {
           bookCount: bookCount,
         };
       });
-      return authorsWithBookCount;
+    },
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      if (!books.find((b) => b.author === args.author)) {
+        // Author does not exist. Need to create new author
+        const newAuthor = {
+          name: args.author,
+          born: null
+        }
+        authors = authors.concat(newAuthor)
+      }
+      const book = { ...args, id: uuid() };
+      books = books.concat(book);
+      return book;
     },
   },
 };
