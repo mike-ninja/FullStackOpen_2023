@@ -186,7 +186,6 @@ const resolvers = {
       if (!author) {
         return null;
       }
-
       const bookCount =
         books.filter((book) => book.author === author.name).length;
       const updatedAuthor = {
