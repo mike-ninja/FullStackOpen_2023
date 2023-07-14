@@ -10,6 +10,7 @@ const App = () => {
 
   const result = useQuery(GET_ALL);
 
+  console.log(result.data)
   const [addBook] = useMutation(ADD_BOOK, {
     refetchQueries: [{ query: GET_ALL }],
   });

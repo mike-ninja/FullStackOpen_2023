@@ -4,7 +4,9 @@ export const GET_ALL = gql`
   query {
     allBooks {
       title
-      author
+      author {
+        name
+      }
       published
     }
     allAuthors {
