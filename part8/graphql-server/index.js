@@ -166,7 +166,6 @@ const resolvers = {
           args.author === book.author.name
         );
       } else if (!args.author && args.genre) {
-        console.log("This happens");
         return books.map((book) => book).filter((book) =>
           book.genres.includes(args.genre)
         );
@@ -242,21 +241,7 @@ const resolvers = {
         })
       }
 
-      console.log(author)
-      author.born = args.born;
-      // const author = authors.find((a) => a.name === args.name);
-      // if (!author) {
-      //   return null;
-      // }
-      // const bookCount =
-      //   books.filter((book) => book.author === author.name).length;
-      // const updatedAuthor = {
-      //   ...author,
-      //   born: args.setBornTo,
-      //   bookCount: bookCount,
-      // };
-      // authors = authors.map((a) => a.name === args.name ? updatedAuthor : a);
-      // return updatedAuthor;
+      author.born = args.setBornTo;
       try {
         await author.save();
       } catch (error) {
