@@ -1,9 +1,9 @@
 interface ExcerciseCalculation {
   periodLength: number;
   trainingDays: number;
-  // success: boolean;
+  success: boolean;
   rating: number;
-  // ratingDescription: string;
+  ratingDescription: string;
   target: number;
   average: number;
 }
