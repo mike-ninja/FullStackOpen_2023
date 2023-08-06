@@ -1,3 +1,5 @@
+import { isNotNumber } from "./utils/inNotNumber";
+
 interface ExcerciseCalculation {
   periodLength: number;
   trainingDays: number;
@@ -7,6 +9,22 @@ interface ExcerciseCalculation {
   target: number;
   average: number;
 }
+
+const parseArguments = (args: string[]): number[] => {
+  let schedule: number[] = [];
+
+  if (args.length <= 2) {
+    throw new Error("Provide workout hours");
+  }
+  for (let i = 2; i < args.length; i++) {
+    if (!isNotNumber(args[i])) {
+      throw new Error("Provided values were not number!");
+    } else {
+      schedule = schedule.concat(Number(args[i]))
+    }
+  }
+  return schedule;
+};
 
 const calculateExercises = (schedule: number[]): ExcerciseCalculation => {
   const target = 2;
@@ -23,7 +41,6 @@ const calculateExercises = (schedule: number[]): ExcerciseCalculation => {
     rating = 1;
   }
   let ratingDescription;
-  console.log(rating);
   if (rating === 3) {
     ratingDescription = "Good Job";
   } else if (rating === 2) {
@@ -44,4 +61,15 @@ const calculateExercises = (schedule: number[]): ExcerciseCalculation => {
   return calculations;
 };
 
-console.log(calculateExercises([0, 0, 0, 1.5, 0, 3, 1]));
+try {
+  const schedule = parseArguments(process.argv);
+  console.log(
+    calculateExercises(schedule),
+  );
+} catch (error) {
+  let errorMessage = "Something went wrong: ";
+  if (error instanceof Error) {
+    errorMessage += error.message;
+  }
+  console.error(errorMessage);
+}
